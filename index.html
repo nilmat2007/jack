@@ -1,14 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>จักรพันธ์ ราชญาณ(โค้ชแจ๊ค)</title>
-<link rel="icon" href="https://lh3.googleusercontent.com/d/1GNTsQfBXQVEPHVwSAGmu7BVX4wiRsvG5" type="image/x-icon">
-<link rel="shortcut icon" href="https://lh3.googleusercontent.com/d/1GNTsQfBXQVEPHVwSAGmu7BVX4wiRsvG5" type="image/x-icon">
-<link rel="icon" href="https://https://lh3.googleusercontent.com/d/1GNTsQfBXQVEPHVwSAGmu7BVX4wiRsvG5" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect Line Notify</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+        }
+
+        button {
+            background-color: #06c755;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #04a642;
+        }
+
+        /* Pop-up Styling */
+        #popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            display: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #popup p {
+            margin-bottom: 1rem;
+        }
+
+        /* Loading Spinner Styling */
+        #loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            border: 6px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 6px solid #06c755;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-<iframe style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;border: 0;" src="https://script.google.com/macros/s/AKfycbwOYgq4gQ5UzbdyMFRqxEzF2vc6aXsikAJMBsgQbGsTdU1m2LqpCM3HP7CgD6cx9y7o/exec"></iframe>
+    <div class="container">
+        <h1>Connect to Line Notify</h1>
+        <p>Click the button below to connect Line Notify with your account.</p>
+        <button id="connectBtn">Connect Line Notify</button>
+    </div>
+
+    <!-- Pop-up for confirmation -->
+    <div id="popup">
+        <p>Connecting to Line Notify...</p>
+        <button id="confirmBtn">OK</button>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <script>
+        const clientId = 'nuixrPmmuB0FuwOc2cVtCJ'; // ใส่ Line Notify Client ID ที่นี่
+        const redirectUri = 'https://script.google.com/macros/s/AKfycbz9bYnL17vqB4dFvW-UdGMRlbeMie0bOiR50TvUNyT9vjEY8ANut4nlL0mCDZFFlGfBlg/exec'; // ใส่ URL ที่ใช้รับ Token
+        const scope = 'notify';
+        const state = 'random_state'; // ค่าที่ใช้ระบุสถานะเพื่อป้องกัน CSRF
+
+        const connectBtn = document.getElementById('connectBtn');
+        const popup = document.getElementById('popup');
+        const loading = document.getElementById('loading');
+        const confirmBtn = document.getElementById('confirmBtn');
+
+        connectBtn.addEventListener('click', () => {
+            // แสดง Loading Spinner
+            showLoading(true);
+
+            // จำลองการรอเพื่อทำงานบางอย่างก่อน
+            setTimeout(() => {
+                // ซ่อน Loading Spinner
+                showLoading(false);
+
+                // แสดง Pop-up
+                popup.style.display = 'block';
+            }, 2000); // จำลองว่ารอ 2 วินาที (คุณสามารถกำหนดเวลาให้สอดคล้องกับขั้นตอนจริง)
+
+            // สร้าง URL สำหรับอนุญาตให้เชื่อมต่อ Line Notify
+            const authUrl = `https://notify-bot.line.me/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}&state=${state}`;
+            window.location.href = authUrl;
+        });
+
+        confirmBtn.addEventListener('click', () => {
+            // ซ่อน Pop-up
+            popup.style.display = 'none';
+        });
+
+        // ฟังก์ชันแสดงหรือซ่อน Loading Spinner
+        function showLoading(show) {
+            loading.style.display = show ? 'flex' : 'none';
+        }
+    </script>
 </body>
 </html>
